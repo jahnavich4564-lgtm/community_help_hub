@@ -1,0 +1,2 @@
+const express=require("express");const r=express.Router();const c=require("../controllers/bookingController");const auth=require("../middleware/authMiddleware");
+r.post("/",auth,c.createBooking);r.get("/",auth,c.getBookings);r.put("/:id",auth,c.updateBooking);module.exports=r;

@@ -1,0 +1,16 @@
+const express=require("express");
+const r=express.Router();
+const c=require("../controllers/adminController");
+const help=require("../controllers/helpController");
+const auth=require("../middleware/authMiddleware");
+const {verifyAdmin}=auth;
+r.use(auth,verifyAdmin);
+r.get("/stats",c.getDashboardStats);
+r.get("/requests",c.getRecentRequests);
+r.get("/bookings",c.getRecentBookings);
+r.get("/payments",c.getRecentPayments);
+r.get("/users",c.getUsers);
+r.get("/join-requests",c.getJoinRequests);
+r.put("/requests/:id/approve",help.adminApproveHelp);
+r.put("/requests/:id/reject",help.adminRejectHelp);
+module.exports=r;

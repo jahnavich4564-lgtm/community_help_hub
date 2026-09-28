@@ -1,0 +1,18 @@
+require("dotenv").config();
+const express=require("express");const cors=require("cors");const path=require("path");
+const app=express();require("./config/db");
+const authRoutes=require("./routes/authRoutes"),helpRoutes=require("./routes/helpRoutes"),communityRoutes=require("./routes/communityRoutes");
+const bookingRoutes=require("./routes/bookingRoutes"),paymentRoutes=require("./routes/paymentRoutes"),adminRoutes=require("./routes/adminRoutes");
+const userRoutes=require("./routes/userRoutes"),notificationRoutes=require("./routes/notificationRoutes"),messageRoutes=require("./routes/messageRoutes"),serviceRoutes=require("./routes/serviceRoutes");
+app.use(cors({origin:(origin,cb)=>cb(null,true),credentials:true}));
+app.use(express.json({limit:"2mb"}));app.use(express.urlencoded({extended:true}));app.use("/uploads",express.static(path.join(__dirname,"uploads")));
+app.use("/api/auth",authRoutes);
+app.get("/api/public/stats",(req,res)=>require("./controllers/adminController").getDashboardStats(req,res));app.use("/api/help",helpRoutes);app.use("/api/communities",communityRoutes);app.use("/api/bookings",bookingRoutes);
+app.use("/api/payments",paymentRoutes);app.use("/api/admin",adminRoutes);app.use("/api/users",userRoutes);app.use("/api/notifications",notificationRoutes);
+app.use("/api/messages",messageRoutes);app.use("/api/services",serviceRoutes);
+app.get("/",(req,res)=>res.json({success:true,project:"AI Powered Community Help Hub",version:"2.0",backend:"Express.js",database:"SQLite",status:"Running"}));
+app.get("/health",(req,res)=>res.json({success:true,server:"Healthy",uptime:process.uptime(),timestamp:new Date().toISOString()}));
+app.get("/api",(req,res)=>res.json({success:true,endpoints:["auth","help","communities","bookings","payments","admin","users","notifications","messages","services"]}));
+app.use((req,res)=>res.status(404).json({success:false,message:"API route not found",url:req.originalUrl}));
+app.use((err,req,res,next)=>{console.error(err);res.status(500).json({success:false,message:err.message||"Internal server error"});});
+const PORT=process.env.PORT||5000;app.listen(PORT,()=>console.log(`Community Help Hub API running on http://localhost:${PORT}`));

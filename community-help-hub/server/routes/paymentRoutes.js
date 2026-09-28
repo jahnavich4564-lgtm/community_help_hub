@@ -1,0 +1,2 @@
+const express=require("express");const r=express.Router();const c=require("../controllers/paymentController");const auth=require("../middleware/authMiddleware");
+r.post("/",auth,c.createPayment);r.get("/",auth,c.getPayments);module.exports=r;

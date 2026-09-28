@@ -1,0 +1,2 @@
+const express=require("express");const r=express.Router();const c=require("../controllers/messageController");const auth=require("../middleware/authMiddleware");
+r.get("/:userId",auth,c.list);r.post("/:userId",auth,c.send);module.exports=r;
